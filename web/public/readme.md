@@ -1,5 +1,13 @@
 # Frontend Build Instructions / 前端构建说明 / フロントエンド構築手順
 
+## This fork / 当前 fork
+
+This fork builds [YouChenJun/komari-web](https://github.com/YouChenJun/komari-web/tree/fix/terminal-copy) at commit `94793e4d297ed09fc6e651ec27f57b7015d0778e` by default. It fixes right-click selection replacement on macOS, preserves selections after copying, supports `Ctrl+Shift+C`, and adds a clipboard fallback with failure feedback. The frontend has browser regression tests (`npm run test:terminal`).
+
+当前 fork 默认构建上述固定提交的前端，包含终端复制修复。`.github/actions/build-frontend` 的 `repository` / `ref` 输入仍支持指定其他仓库、分支、标签或提交；`ref` 留空时使用此修复提交。回退时将这两个输入改为上游仓库和所需版本，再重新构建即可。
+
+终端路由强制使用内置前端，因此需要重新构建并部署后端才能让 `/terminal` 使用修复，单独上传主题不会更新此页面。
+
 ## English
 
 ### Frontend Repository
@@ -61,8 +69,9 @@
 
 ```bash
 # Clone frontend repository / 克隆前端仓库 / フロントエンドリポジトリをクローン
-git clone https://github.com/komari-monitor/komari-web
+git clone https://github.com/YouChenJun/komari-web
 cd komari-web
+git checkout 94793e4d297ed09fc6e651ec27f57b7015d0778e
 
 # Install dependencies and build / 安装依赖并构建 / 依存関係をインストールしてビルド
 npm install
