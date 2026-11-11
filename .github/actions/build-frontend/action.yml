@@ -7,9 +7,9 @@ inputs:
     default: "23"
   repository:
     description: komari-web repository URL.
-    default: https://github.com/komari-monitor/komari-web
+    default: https://github.com/YouChenJun/komari-web
   ref:
-    description: Optional komari-web ref to build. Uses the repository default branch when empty.
+    description: Optional komari-web branch, tag or commit. Uses the pinned terminal-copy fix when empty.
     default: ""
   artifact-name:
     description: Optional artifact name for the packed frontend theme.
@@ -34,14 +34,15 @@ runs:
 
     - name: Clone and build frontend
       shell: bash
+      env:
+        FRONTEND_REPOSITORY: ${{ inputs.repository }}
+        FRONTEND_REF: ${{ inputs.ref || '94793e4d297ed09fc6e651ec27f57b7015d0778e' }}
       run: |
         set -euxo pipefail
         rm -rf komari-web
-        if [ -n "${{ inputs.ref }}" ]; then
-          git clone --depth=1 --branch "${{ inputs.ref }}" "${{ inputs.repository }}" komari-web
-        else
-          git clone --depth=1 "${{ inputs.repository }}" komari-web
-        fi
+        git clone --depth=1 "$FRONTEND_REPOSITORY" komari-web
+        git -C komari-web fetch --depth=1 origin "$FRONTEND_REF"
+        git -C komari-web checkout --detach FETCH_HEAD
         cd komari-web
         npm install
         npm run build
